@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
     AppBar,
     Box,
@@ -14,14 +14,9 @@ import {
     ListItemText,
     Toolbar,
     Typography,
-    TextField,
 } from "@mui/material";
 import { Logout as LogoutIcon, Menu as MenuIcon } from "@mui/icons-material";
 
-type Message = {
-    sender: "user" | "system";
-    text: string;
-};
 
 export default function NaviLayout({
     children,

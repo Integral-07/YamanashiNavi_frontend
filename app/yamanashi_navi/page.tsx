@@ -26,14 +26,30 @@ const Page: React.FC = () => {
         })
 */
   const fetchMessages = async () => {
+    /*
     try {
       const response = await axios.get('/api/with_chatGPT');
       console.log(response);
-      const data: Message[] = response.data; // axiosでは response.data を使う
+      const data: Message[] = response.data;
       setMessages(data);
     } catch (error) {
       console.error('Error fetching messages:', error);
     }
+    */
+    messages.push({
+      id: "1",
+      role: "user",
+      content: "こんにちは、元気ですか？",
+      timestamp: new Date().toISOString()
+    });
+
+    messages.push({
+      id: "2",
+      role: "bot",
+      content: "はい！元気です！",
+      timestamp: new Date().toISOString()
+    });
+    
   };
 
   useEffect(() => {
@@ -79,13 +95,21 @@ const Page: React.FC = () => {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div">
-            チャット
+            あい と会話する
           </Typography>
         </Toolbar>
       </AppBar>
 
       {/* Chat area */}
-      <Box sx={{ flexGrow: 1, overflowY: 'auto', my: 2 }}>
+      <Box sx={{
+        flexGrow: 1,
+        overflowY: 'auto',
+        my: 2,
+        marginBottom: '80px', // Input area height + padding
+        bgcolor: 'grey.100', // 背景を薄い灰色に設定
+        borderRadius: 2,     // 少し角を丸く
+        p: 2,                // 内側に余白を追加
+      }}>
         <List>
         {Array.isArray(messages) && messages.length > 0 ? (
           messages.map((message) => (
@@ -113,7 +137,17 @@ const Page: React.FC = () => {
       </Box>
 
       {/* Input area */}
-      <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+      <Box sx={{
+    position: 'fixed',
+    bottom: 20,
+    left: 0,
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    bgcolor: 'background.paper',
+    p: 1,
+    boxShadow: '0 -2px 5px rgba(0,0,0,0.1)', // Optional for styling
+    }}>
         <TextField
           variant="outlined"
           placeholder="メッセージを入力..."
