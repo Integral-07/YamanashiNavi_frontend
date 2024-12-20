@@ -1,0 +1,30 @@
+.layout{
+
+    @media (min-width: 768px) {
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    }
+}
+
+.header{
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+
+.container{
+
+    flex-flow: 1;
+    display: flex;
+}
+
+.content{
+    flex-grow :2;
+    padding: 20px;
+}
+
+.footer{
+    background-color: #714c4c;
+    padding: 5px;
+}
