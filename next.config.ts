@@ -12,7 +12,7 @@ module.exports = {
     return[
       {
         source: '/api/:path*',
-        destination: "https://c3c6-133-23-3-117.ngrok-free.app/api/:path*/",
+        destination: "https://yamanashinavi-backend.onrender.com/api/:path*/",
       }
     ]
   }
