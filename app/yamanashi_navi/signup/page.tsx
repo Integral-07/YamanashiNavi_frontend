@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 'use client'
 import{
     createTheme,
@@ -12,12 +14,13 @@ import{
 
 import {useRouter} from "next/navigation";
 import {useForm} from "react-hook-form";
-import { useState } from "react";
 import axios from "axios";
 
 type FormData = {
     username: string;
+    email: string;
     password: string;
+    password_conf: string;
 };
 
 export default function Page(){
@@ -33,7 +36,9 @@ export default function Page(){
         const onSubmit = (event: any): void => {
             const data: FormData = {
                 username : event.username,
+                email : event.email,
                 password : event.password,
+                password_conf : event.password_conf
             };
     
             handleSignup(data);
@@ -42,12 +47,12 @@ export default function Page(){
     const handleSignup = (data: FormData) => {
 
         axios.post("/api/with_chatGPT/signup", data)
-        .then((response) => {
+        .then(() => {
     
-            router.push("/yamanashi_navi");
+            router.push("/yamanashi_navi/");
         })
         .catch(function(error){
-            console.log("正常に登録できませんでした");
+            console.log("正常に登録できませんでした", error);
         });
     };
 

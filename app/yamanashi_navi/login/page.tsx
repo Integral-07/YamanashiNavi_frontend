@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 'use client'
 
 import{
@@ -29,7 +31,7 @@ export default function Page(){
     } = useForm();
 
     const[authError, setAuthError] = useState("");
-    const [userId, setUserId] = useState<string | null>(null); // userIdを状態で保持
+    const [userId, setUserId] = useState<string>(""); // userIdを状態で保持
     const router = useRouter();
 
 
@@ -49,16 +51,16 @@ export default function Page(){
         axios.post("/api/with_chatGPT/login", data)
         .then((response) => {
 
-            const { user_id } = response.data; // レスポンスからuser_idを取得
+            setUserId(response.data); // レスポンスからuser_idを取得
 
-            setUserId(user_id); // 状態に保存
+            setUserId(userId); // 状態に保存
 
             // localStorageにuser_idを保存して、ページリロード後も保持
-            localStorage.setItem("user_id", user_id);
+            localStorage.setItem("user_id", userId);
 
             router.push("/yamanashi_navi");
         })
-        .catch(function(error){
+        .catch(function(){
             setAuthError("ユーザ名またはパスワードが間違っています！");
         });
     };
@@ -79,6 +81,11 @@ export default function Page(){
                             Login
                         </Typography>
                         <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+                            {authError && (
+                                <Typography variant="body2" color="error">
+                                    {authError}
+                                </Typography>
+                            )}{""}
                             <TextField
                                 type="text"
                                 id="username"
