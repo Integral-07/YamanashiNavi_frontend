@@ -15,16 +15,6 @@ interface Message {
 const Page: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
-  /*
-  axios.get('http://127.0.0.1:8000/api/with_chatGPT')
-        .then(response=>{
-          console.log("status:",response.status)
-          console.log("axiosGetData:",response.data)
-        })
-        .catch(err=>{
-          console.log("axiosGetErr",err)
-        })
-  */
 
   const fetchMessages = async () => {
   
@@ -34,7 +24,7 @@ const Page: React.FC = () => {
       const data: Message[] = response.data;
       setMessages(data);
       messages.push({
-        id: response.data["id"],
+        id: response.data["user_id"],
         role: response.data["role"],
         content: response.data["content"],
         timestamp: response.data["timestamp"]
