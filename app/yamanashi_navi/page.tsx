@@ -38,7 +38,7 @@ const Page: React.FC = () => {
   
     try {
       const hashedUsername = await handleHashUsername(username);
-      const response = await axios(`/api/with_chatGPT/chat/${hashedUsername}`); 
+      const response = await axios(`/api/with_chatGPT/chat/${hashedUsername}/`); 
       console.log(response);
       const data: Message[] = response.data;
       setMessages(data);
@@ -77,7 +77,7 @@ const Page: React.FC = () => {
     try {
       const hashedUsername = await handleHashUsername(username);
 
-      const response = await fetch(`/api/with_chatGPT/chat/${hashedUsername}`, {
+      const response = await fetch(`/api/with_chatGPT/chat/${hashedUsername}/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
