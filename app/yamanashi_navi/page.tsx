@@ -15,11 +15,30 @@ interface Message {
 const Page: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  const [username, setUsername] = useState('');
+
+  // Load the saved username from localStorage
+  useEffect(() => {
+    const savedUsername = localStorage.getItem('username');
+    if (savedUsername) {
+      setUsername(savedUsername);
+    }
+  }, []);
+
+  const handleHashUsername = async (username: string): Promise<string> => {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(username);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+    return hashHex;
+  };
 
   const fetchMessages = async () => {
   
     try {
-      const response = await axios.get('/api/with_chatGPT');
+      const hashedUsername = await handleHashUsername(username);
+      const response = await axios(`/api/with_chatGPT/${hashedUsername}`); 
       console.log(response);
       const data: Message[] = response.data;
       setMessages(data);
@@ -32,19 +51,6 @@ const Page: React.FC = () => {
     } catch (error) {
       console.error('Error fetching messages:', error);
     }
-    messages.push({
-      id: "1",
-      role: "user",
-      content: "こんにちは、元気ですか？",
-      timestamp: new Date().toISOString()
-    });
-
-    messages.push({
-      id: "2",
-      role: "bot",
-      content: "はい！元気です！",
-      timestamp: new Date().toISOString()
-    });
     
   };
 
@@ -52,6 +58,8 @@ const Page: React.FC = () => {
 
     fetchMessages();
   }, []);
+
+  
 
   const handleSend = async () => {
     if (input.trim() === '') return;
@@ -67,7 +75,9 @@ const Page: React.FC = () => {
     setMessages((prevMessages) => [...prevMessages, newMessage]);
 
     try {
-      const response = await fetch('/api/with_chatGPT', {
+      const hashedUsername = await handleHashUsername(username);
+
+      const response = await fetch(`/api/with_chatGPT/${hashedUsername}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -85,13 +95,27 @@ const Page: React.FC = () => {
     setInput('');
   };
 
+  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newName = event.target.value;
+    setUsername(newName);
+    localStorage.setItem('username', newName); // Save username to localStorage
+  };
+
   return (
     <Container maxWidth="sm" sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div">
-            あい と会話する
+          <TextField
+            variant="outlined"
+            placeholder="名前を入力"
+            size="small"
+            value={username}
+            onChange={handleUsernameChange}
+            sx={{ bgcolor: 'white', borderRadius: 1 }}
+          />
+            として あい と会話する
           </Typography>
         </Toolbar>
       </AppBar>
