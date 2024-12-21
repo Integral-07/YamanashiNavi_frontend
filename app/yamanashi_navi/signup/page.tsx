@@ -26,7 +26,6 @@ export default function Page(){
         handleSubmit,
         formState: {errors},
     } = useForm();
-    const[authError, setAuthError] = useState("");
     const router = useRouter();
 
     const defaultTheme = createTheme();
@@ -48,7 +47,7 @@ export default function Page(){
             router.push("/yamanashi_navi");
         })
         .catch(function(error){
-            setAuthError("正常に登録できませんでした");
+            console.log("正常に登録できませんでした");
         });
     };
 
