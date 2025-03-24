@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-explicit-any: 0 */
 'use client'
 
 import {
@@ -30,7 +31,6 @@ export default function Page() {
     } = useForm();
 
     const [authError, setAuthError] = useState("");
-    const [userId, setUserId] = useState<string>(""); // userIdを状態で保持
     const router = useRouter();
 
     const defaultTheme = createTheme();
@@ -47,13 +47,7 @@ export default function Page() {
     const handleLogin = (data: FormData) => {
 
         axios.post("/api/web/login", data)
-        .then((response) => {
-
-            setUserId(response.data); // レスポンスからuser_idを取得
-            setUserId(userId); // 状態に保存
-
-            // localStorageにuser_idを保存して、ページリロード後も保持
-            localStorage.setItem("user_id", userId);
+        .then(() => {
 
             router.push("/yamanashi_navi");
         })
