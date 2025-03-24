@@ -5,7 +5,6 @@ import { Box, TextField, IconButton, List, ListItem, ListItemText, AppBar, Toolb
 import SendIcon from '@mui/icons-material/Send';
 import axios from "@/plugin/axios";
 import { Message } from '@mui/icons-material';
-import dayjs from 'dayjs';
 
 interface Message {
   role: "user" | "ai";
@@ -22,7 +21,7 @@ const Page: React.FC = () => {
   
     try {
       const response = await axios(`/api/web/history/`); 
-      const data: Message[] = response.data;
+      const data= response.data;
       setMessages(data.messages);
       setUsername(response.data.user_name)
 
