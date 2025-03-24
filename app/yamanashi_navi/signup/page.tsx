@@ -12,6 +12,7 @@ import{
     Typography,
 }from "@mui/material";
 
+import { useState } from "react";
 import {useRouter} from "next/navigation";
 import {useForm} from "react-hook-form";
 import axios from "axios";
@@ -24,6 +25,8 @@ type FormData = {
 };
 
 export default function Page(){
+
+
     const{
         register,
         handleSubmit,
@@ -33,31 +36,33 @@ export default function Page(){
 
     const defaultTheme = createTheme();
     
-        const onSubmit = (event: any): void => {
-            const data: FormData = {
-                username : event.username,
-                email : event.email,
-                password : event.password,
-                password_conf : event.password_conf
-            };
-    
-            handleSignup(data);
+    const onSubmit = (event: any): void => {
+        const data: FormData = {
+            username : event.username,
+            email : event.email,
+            password : event.password,
+            password_conf : event.password_conf
         };
+
+        handleSignup(data);
+    };
 
     const handleSignup = (data: FormData) => {
 
-        axios.post("/api/with_chatGPT/signup", data)
+        axios.post("/api/web/signup", data)
         .then(() => {
     
             router.push("/yamanashi_navi/");
         })
         .catch(function(error){
-            console.log("正常に登録できませんでした", error);
+            
+            alert(`正常に登録できませんでした\n${error}`);
         });
     };
 
     return(
     <ThemeProvider theme={defaultTheme}>
+
         <Container component="main">
             <CssBaseline />
             <Box
@@ -69,7 +74,7 @@ export default function Page(){
                 }}
                 >
                     <Typography component="h1" variant="h5">
-                        Login
+                        Signup
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit(onSubmit)}>
                         <TextField
@@ -133,6 +138,7 @@ export default function Page(){
                             helperText={errors.password?.message?.toString() || ""}
                         />
                         <Button 
+
                             variant="contained"
                             type="submit"
                             fullWidth

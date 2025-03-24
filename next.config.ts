@@ -12,7 +12,8 @@ module.exports = {
     return[
       {
         source: '/api/:path*',
-        destination: "https://yamanashinavi-backend.onrender.com/api/:path*/",
+        //destination: "https://yamanashinavi-backend.onrender.com/api/:path*/",
+        destination: "http://host.docker.internal:8000/api/:path*/",
       }
     ]
   }

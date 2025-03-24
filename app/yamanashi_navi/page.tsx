@@ -3,13 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { Box, TextField, IconButton, List, ListItem, ListItemText, AppBar, Toolbar, Typography, Container } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
-import axios from 'axios';
+import axios from "@/plugin/axios";
+import { Message } from '@mui/icons-material';
+import dayjs from 'dayjs';
 
 interface Message {
-  id: string;
-  role: string; 
+  role: "user" | "ai";
   content: string;
-  timestamp: string;
+  time_stamp: string;
 }
 
 const Page: React.FC = () => {
@@ -17,37 +18,14 @@ const Page: React.FC = () => {
   const [input, setInput] = useState('');
   const [username, setUsername] = useState('');
 
-  // Load the saved username from localStorage
-  useEffect(() => {
-    const savedUsername = localStorage.getItem('username');
-    if (savedUsername) {
-      setUsername(savedUsername);
-    }
-  }, []);
-
-  const handleHashUsername = async (username: string): Promise<string> => {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(username);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
-    return hashHex;
-  };
-
   const fetchMessages = async () => {
   
     try {
-      const hashedUsername = await handleHashUsername(username);
-      const response = await axios(`/api/with_chatGPT/chat/${hashedUsername}/`); 
-      console.log(response);
+      const response = await axios(`/api/web/history/`); 
       const data: Message[] = response.data;
-      setMessages(data);
-      messages.push({
-        id: response.data["user_id"],
-        role: response.data["role"],
-        content: response.data["content"],
-        timestamp: response.data["timestamp"]
-      });
+      setMessages(data.messages);
+      setUsername(response.data.user_name)
+
     } catch (error) {
       console.error('Error fetching messages:', error);
     }
@@ -59,25 +37,26 @@ const Page: React.FC = () => {
     fetchMessages();
   }, []);
 
+  useEffect(() => {
+
+    console.log(messages)
+  }, [messages])
+
   
 
   const handleSend = async () => {
     if (input.trim() === '') return;
 
     const newMessage: Message = {
-      id: Date.now().toString(),
+      //id: messages[messages.length - 1]?.id,
       role: 'user',
       content: input,
-      timestamp: new Date().toISOString(),
+      time_stamp: new Date().toISOString(),
     };
 
-    // Optimistically update the UI
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-
     try {
-      const hashedUsername = await handleHashUsername(username);
 
-      const response = await fetch(`/api/with_chatGPT/chat/${hashedUsername}/`, {
+      const response = await fetch(`/api/web/history/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,35 +67,31 @@ const Page: React.FC = () => {
       if (!response.ok) {
         throw new Error('Failed to send message');
       }
+
+      const data = await response.json()
+      setMessages((prevMessages) => [...prevMessages, newMessage, data]);
+      
+
     } catch (error) {
       console.error('Error sending message:', error);
     }
 
-    setInput('');
-  };
 
-  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newName = event.target.value;
-    setUsername(newName);
-    localStorage.setItem('username', newName); // Save username to localStorage
+    setInput('');
   };
 
   return (
     <Container maxWidth="sm" sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
       <AppBar position="static">
-        <Toolbar>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography variant="h6" component="div">
-          <TextField
-            variant="outlined"
-            placeholder="名前を入力"
-            size="small"
-            value={username}
-            onChange={handleUsernameChange}
-            sx={{ bgcolor: 'white', borderRadius: 1 }}
-          />
-            として あい と会話する
+            {username}
           </Typography>
+
+          <IconButton color="inherit" onClick={() => setMessages([])}>
+            <Typography variant="h6" component="div">✖クリア</Typography>
+          </IconButton>
         </Toolbar>
       </AppBar>
 
@@ -131,12 +106,12 @@ const Page: React.FC = () => {
         p: 2,                // 内側に余白を追加
       }}>
         <List>
-        {Array.isArray(messages) && messages.length > 0 ? (
-          messages.map((message) => (
-            <ListItem key={message.id} sx={{ justifyContent: message.role === 'user' ? 'flex-end' : 'flex-start' }}>
+        {messages.length > 0 ? (
+          messages.map((message, index) => (
+            <ListItem key={index} sx={{ justifyContent: message.role === 'user' ? 'flex-end' : 'flex-start' }}>
               <ListItemText
                 primary={message.content}
-                secondary={new Date(message.timestamp).toLocaleString()}
+                secondary={new Date(message.time_stamp).toLocaleString()}
                 sx={{
                   bgcolor: message.role === 'user' ? 'primary.main' : 'grey.300',
                   color: message.role === 'user' ? 'white' : 'black',
