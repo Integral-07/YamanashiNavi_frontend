@@ -1,37 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+![](https://img.shields.io/badge/YAMANASHI_AIハッカソン-2024_最優秀賞-yellow)
+![](https://img.shields.io/badge/状態-リリース-blue)
+![](https://img.shields.io/badge/build-passing-green)
 
-## Getting Started
 
-First, run the development server:
+## プロジェクト名
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+やまなしNavi（F.E.）
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<!-- プロジェクトについて -->
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## プロジェクトについて
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+山梨で楽しく過ごすためのAIエージェント（フロントエンド）
 
-## Learn More
+  <p align="left">
+    <br />
+    <a href="https://qiita.com/Integral-07/items/be2fdeb59b07168a2c95"><strong>ハッカソン参加録（Qiita記事） »</strong></a>
+    <br />
+    <br />
+    
+### 背景
+１．観光入込客数と観光消費額は”観光客数”・”消費額”の観点からコロナ禍から大きな回復基調<br>
+２．山梨県は、圧倒的な地理的優位性（都市圏に近い）、観光資源（自然系、食事系）、インフラ（中央道、JRなど）が揃う希少な地域<br>
+３．観光は国策への流れと後押し、2030年には訪日外国人6,000万人、消費額15兆、GDP10%の予想<br>
+  
+　この流れに乗って、もっと山梨観光を楽しんで欲しい！という想いで開発を始めた<br>
+<p align="left">
+    　<a href="https://www.pref.yamanashi.jp/documents/2062/03houkokusho2023.pdf"><strong>令和5年山梨県観光入込客統計調査報告書 »</strong></a>
+    <br>
+    <br>
+</p>
 
-To learn more about Next.js, take a look at the following resources:
+### 概要
+➢ 山梨の観光の魅力を伝える情報提供アプリ<br>
+➢ ユーザーの質問、状況にもとづいて観光の提案をする<br>
+➢ 会話が楽しくなるような面白さ、親しみやすさ(AIの口調やキャラ付け)<br>
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 機能
+➢ 対話形式のチャットボット（というよりもエージェント）<br>
+➢ 位置、移動手段、季節、やりたいこと（行く、食、遊ぶ）などにもとづき候補となるスポットの提案をする<br>
+➢ ユーザーの求めに応じて、スポットについての詳細な説明をしたり、天気などのアドバイスもできる<br>
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## AIプラットフォーム選定
+以下の特徴を持つDifyを採用
 
-## Deploy on Vercel
+- LLMモデル（ OpenAIの適切なモデル）
+- RAG（山梨の観光スポットに関する情報を中心にKnowledgeを与える）
+- APIによるアクション（モデルによる判断でAPIで外部機能を使用）
+  - Goolge Search
+  - Wikipedia
+  - Open weather or Google
+ 
+## フロントエンド
+- Dify提供のWebサイト
+- Dify提供のエンジンをHTML埋め込み
+- オリジナルWebフロントエンド( https://yamanashi-navi-frontend.vercel.app/yamanashi_navi/login )
+- LINE接続（LINE MessagingAPI）
+- WhatsApp接続（未実装）
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+![スクリーンショット 2025-02-27 112803](https://github.com/user-attachments/assets/149896fd-9fc3-4bed-9af0-c5b487e30682)
+![スクリーンショット 2025-02-27 113350](https://github.com/user-attachments/assets/2e16e4ab-79fb-41ef-910f-42ef033f6852)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# YamanashiNavi_frontend
+## 技術スタック
+![スクリーンショット 2025-02-27 113722](https://github.com/user-attachments/assets/003dafa0-1e70-4a54-bdd5-4e941ba7557d)
+
+
+
+## 使用技術一覧
+
+<!-- シールド一覧 -->
+<p style="display: inline">
+  <!-- フロントエンドのフレームワーク -->
+  <img src="https://img.shields.io/badge/-Next.js-181717.svg?logo=next&style=for-the-badge">
+  <img src="https://img.shields.io/badge/-React-1488C6.svg?logo=react&style=for-the-badge">
+  <img src="https://img.shields.io/badge/-Type Script-C0C300.svg?logo=typescript&style=for-the-badge">
+  <!-- バックエンドのフレームワーク -->
+  <!-- バックエンドの言語 -->
+  <!-- ミドルウェア -->
+  <!-- インフラ -->
+  <img src="https://img.shields.io/badge/-Docker-1488C6.svg?logo=docker&style=for-the-badge">
+  <img src="https://img.shields.io/badge/-Github-181717.svg?logo=github&style=for-the-badge">
+</p>
+
+
+パッケージのバージョンは yarn.lock を参照してください
+
