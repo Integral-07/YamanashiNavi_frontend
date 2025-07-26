@@ -15,10 +15,11 @@ interface Message {
 const Page: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
-  const [username, setUsername] = useState('');
+  const [isInputActive, setIsInputActive] = useState(true);
+  const [username, setUsername] = useState('Guest');
 
   const fetchMessages = async () => {
-  
+
     try {
       const response = await axios(`/api/web/history/`); 
       const data= response.data;
@@ -44,14 +45,26 @@ const Page: React.FC = () => {
   
 
   const handleSend = async () => {
+
+    if(!isInputActive){
+
+      alert("AIが返信中です...");
+      return;
+    }
+
     if (input.trim() === '') return;
 
     const newMessage: Message = {
-      //id: messages[messages.length - 1]?.id,
       role: 'user',
       content: input,
       time_stamp: new Date().toISOString(),
     };
+
+    // ユーザメッセージの追加
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+    setIsInputActive(false);
+    // 入力欄の初期化
+    setInput('');
 
     try {
 
@@ -67,16 +80,15 @@ const Page: React.FC = () => {
         throw new Error('Failed to send message');
       }
 
-      const data = await response.json()
-      setMessages((prevMessages) => [...prevMessages, newMessage, data]);
+      const aiMessage = await response.json() // AIからの応答
+      setMessages((prevMessages) => [...prevMessages, aiMessage]);
       
 
     } catch (error) {
       console.error('Error sending message:', error);
     }
 
-
-    setInput('');
+    setIsInputActive(true);
   };
 
   return (
